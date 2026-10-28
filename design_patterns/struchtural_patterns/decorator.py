@@ -1,5 +1,5 @@
 
-
+# The Core Interface
 class Coffee:
 
     def cost(self) -> float:
@@ -15,13 +15,13 @@ class CoffeeDecorator(Coffee):
     def cost(self):
         return self._coffee_object.cost()
 
-
+# Concrete Decorator 1
 class MilkDecorator(CoffeeDecorator):
 
     def cost(self):
         return super().cost() + 1.50
 
-
+# Concrete Decorator 2
 class SugarDecorator(CoffeeDecorator):
 
     def cost(self):
