@@ -45,6 +45,7 @@ class WindowDisplay(Observer):
         print(f"Window temperatur {temperature}")
 
 
+# --- Implementation ---
 if __name__ == "__main__":
     station = WeatherStation()
     phone= PhoneDisplay()
