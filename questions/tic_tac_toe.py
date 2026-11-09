@@ -26,7 +26,7 @@ class Board:
 
     def place_peice(self, row:int, col:int, symbol: Symbol) -> bool:
         if self.is_valid_move(row, col):
-            self.grid[row][col] = Symbol
+            self.grid[row][col] = symbol
             return True
         else:
             return False
@@ -64,7 +64,39 @@ class BotPlayer(Player):
 
 class Game:
 
-    
+    def __init__(self, player1: Player, player2: Player, size: int = 3):
+        self.board = Board(size)
+        self.player = [player1, player2]
+        self.current_player_index = 0
+
+    def start(self):
+        print("🚀 Game Started!")
+
+        while True:
+            self.board.display()
+            current_player =  self.player[self.current_player_index]
+
+            try:
+                row, col = current_player.make_move(self.board)
+                if not self.board.place_peice(row, col, current_player.symbol):
+                    print("Invalid move try again")
+            except (ValueError, IndexError):
+                print ('Invalid input format try again')
+                continue
+
+    def check_game_over(self, row:int, col, int, symbol:Symbol) -> bool:
+
+        size = self.board.size
+        grid = self.board.grid 
+
+        row_win = all(grid[row][i] == symbol for i in range(size))
+        col_win = all(grid[i][col] == symbol for i in range(size))
+        dig_win = all(grid[i][i] == symbol for i in range(size))
+        anti_dig_win = all(grid[i][size - 1 - i] for i  in range(size))
+
+        return row_win or col_win or dig_win or anti_dig_win
+
+
 
 board = Board()
 bot = BotPlayer("Bot", Symbol.O)
