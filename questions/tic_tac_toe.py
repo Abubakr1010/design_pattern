@@ -22,7 +22,7 @@ class Board:
              print("-" * (self.size * 2))
 
     def is_valid_move(self, row: int, col:int) -> bool:
-        return 0 <= row < self.size and 0 <= col <= self.size and self.grid[row][col]
+        return 0 <= row < self.size and 0 <= col <= self.size and self.grid[row][col] is None
 
     def place_peice(self, row:int, col:int, symbol: Symbol) -> bool:
         if self.is_valid_move(row, col):
@@ -49,8 +49,8 @@ class Player(ABC):
 class HumanPlayer(Player):
 
     def make_move(self, board:Board) -> tuple[int,int]:
-        row = int(input(f"{self.name} {self.symbol.value}, enter row:"))
-        col = int(input(f"{self.name} {self.symbol.value}, enter col:"))
+        row = int(input(f"{self.name} ({self.symbol.value}), enter row:"))
+        col = int(input(f"{self.name} ({self.symbol.value}), enter col:"))
         return row, col
 
 
@@ -84,7 +84,25 @@ class Game:
                 print ('Invalid input format try again')
                 continue
 
-    def check_game_over(self, row:int, col, int, symbol:Symbol) -> bool:
+            if self.check_game_over(row, col, current_player.symbol):
+                self.board.display()
+                print(f"🎉 {current_player.name} wins!")
+                break
+
+
+            if self.board.is_full():
+                self.board.display()
+                print("it's a draw!")
+                break
+
+            self.switch_turn()
+
+
+    def switch_turn(self):
+        self.current_player_index = 1 - self.current_player_index
+
+    
+    def check_game_over(self, row:int, col:int, symbol:Symbol) -> bool:
 
         size = self.board.size
         grid = self.board.grid 
@@ -98,9 +116,8 @@ class Game:
 
 
 
-board = Board()
-bot = BotPlayer("Bot", Symbol.O)
-bot.make_move(board)
 
-print(board.display())
-print(bot.make_move(board))
+p1 = HumanPlayer('Abubakr', Symbol.O)
+p2 = BotPlayer('Bot', Symbol.X)
+game = Game(p1, p2)
+game.start()
